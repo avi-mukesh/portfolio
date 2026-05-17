@@ -32,6 +32,7 @@ interface Project {
   lang: string;
   year: string;
   blurb: string;
+  href?: string;
 }
 
 interface TimelineItem {
@@ -202,9 +203,9 @@ function V3Portfolio() {
 
   const projects: Project[] = [
   { name: 'crypto-xs-momo', lang: 'Python', year: '2026', blurb: 'A cross-sectional momentum strategy on crypto combining recent price returns, tweet-attention divergence (tweet counts, not sentiment) and order-flow taker imbalance. Backtested 2022–2024 across 8 Binance perpetuals. Writeup in progress.' },
-  { name: 'quant-finance-content', lang: 'Instagram · @avi_mukesh', year: 'ongoing', blurb: 'Short-form videos translating mathematical-finance concepts — put-call parity, Monte Carlo, CAPM, value-at-risk, random walks — for a general audience.' },
+  { name: 'quant-finance-content', lang: 'Instagram · @avi_mukesh', year: 'ongoing', blurb: 'Short-form videos translating mathematical-finance concepts — put-call parity, Monte Carlo, CAPM, value-at-risk, random walks — for a general audience.', href: 'https://www.instagram.com/avi_mukesh/' },
   { name: 'premier-league-predictor', lang: 'Python · AWS SageMaker', year: '2023', blurb: 'AWS ML Engineer Nanodegree capstone. Random Forest classifier on a Kaggle Premier League dataset. 60% precision after tuning.' },
-  { name: '80in8', lang: 'Next.js', year: '2026', blurb: 'A mental-arithmetic trainer — 80 questions in 8 minutes, with a scoring ladder on the way out.' }];
+  { name: '80in8', lang: 'Next.js', year: '2026', blurb: 'A mental-arithmetic trainer — 80 questions in 8 minutes, with a scoring ladder on the way out.', href: 'https://80in8.com' }];
 
 
   const timeline: TimelineItem[] = [
@@ -215,7 +216,7 @@ function V3Portfolio() {
 
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) =>
-  <a href={href} style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
+  <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
 
 
   return (
@@ -436,7 +437,7 @@ function V3Portfolio() {
           <h2 className="v3-h2" style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 40px' }}>Code in the open.</h2>
           <div className="v3-projects-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             {projects.map((p) =>
-            <a key={p.name} href={`https://github.com/avi-mukesh/${p.name}`} className="v3-card" style={{ textDecoration: 'none', color: text, display: 'block' }}>
+            <a key={p.name} href={p.href ?? `https://github.com/avi-mukesh/${p.name}`} target="_blank" rel="noopener noreferrer" className="v3-card" style={{ textDecoration: 'none', color: text, display: 'block' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
                   <div style={{ ...styles.mono, fontSize: 16, fontWeight: 500 }}>{p.name}</div>
                   <div style={{ ...styles.mono, fontSize: 12, color: muted }}>{p.year}</div>
@@ -598,11 +599,11 @@ function V3Portfolio() {
           </div>
           <h2 className="v3-contact-h2" style={{ fontSize: 72, letterSpacing: '-0.035em', fontWeight: 500, margin: '0 0 40px', lineHeight: 1.02 }}>
             Say hello.<br />
-            <a href="mailto:avimukesh10@gmail.com" className="v3-link" style={{ color: accent }}>avimukesh10@gmail.com</a>
+            <a href="mailto:avimukesh10@gmail.com" target="_blank" rel="noopener noreferrer" className="v3-link" style={{ color: accent }}>avimukesh10@gmail.com</a>
           </h2>
           <div style={{ display: 'flex', gap: 28, ...styles.mono, fontSize: 14, color: muted, flexWrap: 'wrap' }}>
-            <a className="v3-link" href="https://github.com/avi-mukesh">github.com/avi-mukesh ↗</a>
-            <a className="v3-link" href="https://www.linkedin.com/in/avi-mukesh/">linkedin.com/in/avi-mukesh ↗</a>
+            <a className="v3-link" href="https://github.com/avi-mukesh" target="_blank" rel="noopener noreferrer">github.com/avi-mukesh ↗</a>
+            <a className="v3-link" href="https://www.linkedin.com/in/avi-mukesh/" target="_blank" rel="noopener noreferrer">linkedin.com/in/avi-mukesh ↗</a>
           </div>
           <div className="v3-footer-row" style={{ marginTop: 96, paddingTop: 24, paddingBottom: 40, borderTop: `1px solid ${rule}`, display: 'flex', justifyContent: 'space-between', ...styles.mono, fontSize: 12, color: dim }}>
             <span>© 2026 Avi Mukesh</span>

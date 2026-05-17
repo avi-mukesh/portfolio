@@ -1,13 +1,74 @@
+"use client";
+import React from 'react';
 // V3 — Modern Minimal
 // Space Grotesk + JetBrains Mono, generous whitespace, electric blue accent.
-"use client";
 
-import React from 'react';
+type CursorStyle = 'bar' | 'block' | 'underscore' | 'none';
 
-function V3Typewriter({ words, accent, speed = 50, cursor = 'bar' }: { words: string[], accent: string, speed: number, cursor: string }) {
+interface Tweaks {
+  accent: string;
+  typewriter: string[];
+  subtitle: string;
+  typingSpeed: number;
+  marquee: boolean;
+  pulse: boolean;
+  cursor: CursorStyle;
+  cubeColor: boolean;
+}
+
+interface V3TypewriterProps {
+  words: string[];
+  accent: string;
+  speed?: number;
+  cursor?: CursorStyle;
+}
+
+interface V3EquityChartProps {
+  accent?: string;
+}
+
+interface Project {
+  name: string;
+  lang: string;
+  year: string;
+  blurb: string;
+}
+
+interface TimelineItem {
+  years: string;
+  role: string;
+  org: React.ReactNode;
+  detail: string;
+}
+
+declare global {
+  interface Window {
+    tweaks?: Partial<Tweaks>;
+    V3Portfolio: () => React.JSX.Element;
+  }
+}
+
+const defaultTweaks = {
+  accent: '#0066ff',
+  typewriter: [
+    'researching quant strategies.',
+    'shipping software.',
+    'tutoring maths.',
+    'speedcubing & lifting.',
+  ],
+  subtitle:
+    'MMath Warwick (First Class, 83%). Software Developer at Singletrack, four-plus years of maths tutoring, and a quant-finance creator on Instagram. Currently building a cross-sectional momentum strategy on crypto as the capstone for the WallStreetQuants bootcamp. Speedcubing and lifting in between.',
+  typingSpeed: 50,
+  marquee: true,
+  pulse: true,
+  cursor: 'bar',
+  cubeColor: true,
+} satisfies Tweaks;
+
+function V3Typewriter({ words, accent, speed = 50, cursor = 'bar' }: V3TypewriterProps) {
   const [idx, setIdx] = React.useState(0);
   const [text, setText] = React.useState('');
-  const [phase, setPhase] = React.useState('typing');
+  const [phase, setPhase] = React.useState<'typing' | 'holding' | 'deleting'>('typing');
 
   React.useEffect(() => {
     setIdx(0);
@@ -17,7 +78,7 @@ function V3Typewriter({ words, accent, speed = 50, cursor = 'bar' }: { words: st
 
   React.useEffect(() => {
     const target = words[idx] || '';
-    let t: NodeJS.Timeout;
+    let t: ReturnType<typeof setTimeout> | undefined;
     if (phase === 'typing') {
       if (text.length < target.length) {
         t = setTimeout(() => setText(target.slice(0, text.length + 1)), speed + Math.random() * 35);
@@ -34,12 +95,14 @@ function V3Typewriter({ words, accent, speed = 50, cursor = 'bar' }: { words: st
         setIdx((idx + 1) % words.length);
       }
     }
-    return () => clearTimeout(t as NodeJS.Timeout);
+    return () => {
+      if (t) clearTimeout(t);
+    };
   }, [text, phase, idx, words, speed]);
 
   return (
     <span>
-      <span style={{ color: accent, fontSize: "63px" }}>{text}</span>
+      <span style={{ color: accent }}>{text}</span>
       {cursor === 'none' ? null : cursor === 'block' ?
       <span style={{
         display: 'inline-block', width: '0.5em', height: '0.85em', verticalAlign: '-0.05em',
@@ -63,7 +126,7 @@ function V3Typewriter({ words, accent, speed = 50, cursor = 'bar' }: { words: st
 
 }
 
-function V3EquityChart({ accent = '#2350ff' }: { accent: string }) {
+function V3EquityChart({ accent = '#2350ff' }: V3EquityChartProps) {
   const points = [100, 102, 99, 108, 115, 113, 122, 119, 128, 141, 137, 146, 151, 144, 158, 163, 159, 171, 167, 182, 186, 195, 188, 201, 213];
   const W = 840,H = 280,padL = 48,padR = 24,padT = 24,padB = 36;
   const yMin = 95,yMax = 220;
@@ -81,7 +144,7 @@ function V3EquityChart({ accent = '#2350ff' }: { accent: string }) {
           <stop offset="1" stopColor={accent} stopOpacity="0" />
         </linearGradient>
       </defs>
-      {ticksY.map((t: number) =>
+      {ticksY.map((t) =>
       <g key={t}>
           <line x1={padL} x2={W - padR} y1={sy(t)} y2={sy(t)} stroke="#eaeaea" strokeWidth="1" />
           <text x={padL - 10} y={sy(t) + 4} fontSize="11" fill="#9a9a9a" fontFamily="'JetBrains Mono', monospace" textAnchor="end">{t}</text>
@@ -98,24 +161,12 @@ function V3EquityChart({ accent = '#2350ff' }: { accent: string }) {
 
 }
 
-const tweaks = {
-  accent: '#0066ff',
-  typewriter: [
-    'researching quant strategies.',
-    'shipping software.',
-    'tutoring maths.',
-    'speedcubing & lifting.',
-  ],
-  subtitle:
-    'MMath Warwick (First Class, 83%). Software Developer at Singletrack, four-plus years of maths tutoring, and a quant-finance creator on Instagram. Currently building a cross-sectional momentum strategy on crypto as the capstone for the WallStreetQuants bootcamp. Speedcubing and lifting in between.',
-  typingSpeed: 50,
-  marquee: true,
-  pulse: true,
-  cursor: 'bar',
-  cubeColor: true,
-};
-
 function V3Portfolio() {
+  const tweaks: Tweaks = {
+    ...defaultTweaks,
+    ...(typeof window !== 'undefined' ? window.tweaks : undefined),
+  };
+
   const bg = '#fafafa';
   const text = '#0a0a0a';
   const muted = '#6b6b6b';
@@ -133,13 +184,15 @@ function V3Portfolio() {
   'Software developer with a maths background. MMath from Warwick (First Class, 83%) in 2023, two roles since — currently at Singletrack, previously at Dorset Software. Researching crypto momentum on the side and looking to move into quant.';
   const showPulse = tweaks.pulse !== false;
 
-  const styles = {
+  const styles: Record<'root' | 'mono' | 'container' | 'nav' | 'section', React.CSSProperties> = {
     root: {
       width: '100%', minHeight: '100%',
       background: bg, color: text,
       fontFamily: "'Space Grotesk', system-ui, sans-serif",
       fontSize: 16, lineHeight: 1.55,
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      containerType: 'inline-size',
+      containerName: 'v3root'
     },
     mono: { fontFamily: "'JetBrains Mono', ui-monospace, monospace" },
     container: { maxWidth: 1080, margin: '0 auto', padding: '0 64px' },
@@ -147,26 +200,26 @@ function V3Portfolio() {
     section: { padding: '88px 0', borderTop: `1px solid ${rule}` }
   };
 
-  const projects = [
+  const projects: Project[] = [
   { name: 'crypto-xs-momo', lang: 'Python', year: '2026', blurb: 'A cross-sectional momentum strategy on crypto combining recent price returns, tweet-attention divergence (tweet counts, not sentiment) and order-flow taker imbalance. Backtested 2022–2024 across 8 Binance perpetuals. Writeup in progress.' },
   { name: 'quant-finance-content', lang: 'Instagram · @avi_mukesh', year: 'ongoing', blurb: 'Short-form videos translating mathematical-finance concepts — put-call parity, Monte Carlo, CAPM, value-at-risk, random walks — for a general audience.' },
   { name: 'premier-league-predictor', lang: 'Python · AWS SageMaker', year: '2023', blurb: 'AWS ML Engineer Nanodegree capstone. Random Forest classifier on a Kaggle Premier League dataset. 60% precision after tuning.' },
   { name: '80in8', lang: 'Next.js', year: '2026', blurb: 'A mental-arithmetic trainer — 80 questions in 8 minutes, with a scoring ladder on the way out.' }];
 
 
-  const timeline = [
+  const timeline: TimelineItem[] = [
   { years: 'Jan 2025 — Now', role: 'Software Developer', org: 'Singletrack', detail: 'Working with the product team on a B2B SaaS platform for capital-markets firms — features, defects, support tickets. Stack: Apex, Lightning Web Components, AWS, Heroku, Ruby on Rails.' },
   { years: 'Feb 2026 — Now', role: 'Quant Research Bootcamp · Capstone', org: 'WallStreetQuants', detail: '12-week buy-side quant program. Capstone is the cross-sectional momentum strategy detailed in Research above.' },
   { years: 'Sep 2023 — Dec 2024', role: 'Software Developer', org: 'Dorset Software', detail: 'Led the test team for a client-facing API used by a leading insurance firm. ASP.NET and SQL; Postman flows that materially improved efficiency of subsequent testing phases.' },
   { years: 'Dec 2021 — Now', role: 'Maths Tutor', org: <>GoStudent → MyTutor · <a href="https://mukeshacademy.com" target="_blank" rel="noreferrer" className="v3-link">mukeshacademy.com</a></>, detail: 'Four-plus years of one-to-one tutoring. Three and a half years at GoStudent through to May 2025, now at MyTutor, plus a handful of private students who find me through mukeshacademy.com. GCSE and A-Level across pure, stats and mechanics.' }];
 
 
-  const NavLink = ({ href, children }: {href: string, children: React.ReactNode}) =>
+  const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) =>
   <a href={href} style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
 
 
   return (
-    <div style={styles.root as React.CSSProperties}>
+    <div style={styles.root}>
       <style>{`
         @keyframes v3blink { 50% { opacity: 0 } }
         .v3-nav-link { position: relative; }
@@ -199,16 +252,72 @@ function V3Portfolio() {
           0%   { transform: rotateX(-22deg) rotateY(-32deg); }
           100% { transform: rotateX(-22deg) rotateY(328deg); }
         }
+
+        /* ------- Responsive ------- */
+        @container v3root (max-width: 860px) {
+          .v3-container   { padding: 0 36px !important; }
+          .v3-hero        { padding: 72px 0 88px !important; }
+          .v3-h1          { font-size: 88px !important; }
+          .v3-tw          { font-size: 52px !important; }
+          .v3-hero-row    { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .v3-research-bullets { grid-template-columns: 1fr !important; }
+          .v3-projects-grid    { grid-template-columns: 1fr !important; }
+          .v3-cv-grid     { grid-template-columns: 160px 1fr !important; column-gap: 24px !important; }
+          .v3-off-grid    { grid-template-columns: 1fr !important; }
+          .v3-h2          { font-size: 40px !important; }
+          .v3-contact-h2  { font-size: 56px !important; }
+          .v3-section     { padding: 72px 0 !important; }
+        }
+        @container v3root (max-width: 560px) {
+          .v3-container   { padding: 0 20px !important; }
+          .v3-nav-links   { display: none !important; }
+          .v3-hero        { padding: 48px 0 64px !important; }
+          .v3-h1          { font-size: 52px !important; letter-spacing: -0.04em !important; }
+          .v3-tw          {
+            font-size: clamp(17px, 5.1vw, 22px) !important;
+            white-space: nowrap !important;
+            line-height: 1.1 !important;
+            min-height: 1.3em !important;
+            margin-top: 14px !important;
+          }
+          .v3-hero-subtitle { font-size: 18px !important; }
+          .v3-cv-grid     { grid-template-columns: 1fr !important; row-gap: 18px !important; }
+          .v3-cv-years    { padding-top: 0 !important; margin-bottom: -8px !important; }
+          .v3-cert-grid   { grid-template-columns: 1fr !important; }
+          .v3-cubing-grid { gap: 14px !important; }
+          .v3-cubing-grid > div { padding-right: 0 !important; }
+          .v3-cubing-header { gap: 16px !important; }
+          .v3-cubing-cube { width: 72px !important; height: 72px !important; flex-basis: 72px !important; }
+          .v3-card-padded { padding: 22px !important; }
+          .v3-research-card { padding: 22px 22px 18px !important; }
+          .v3-research-card-head { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+          .v3-h2          { font-size: 30px !important; }
+          .v3-contact-h2  { font-size: 32px !important; word-break: break-word !important; overflow-wrap: anywhere !important; }
+          .v3-cubing-grid { grid-template-columns: 1fr 1fr 1fr !important; gap: 10px !important; }
+          .v3-cubing-grid .v3-cubing-value { font-size: 20px !important; }
+          .v3-cubing-grid .v3-cubing-label { font-size: 9px !important; letter-spacing: 0.04em !important; }
+          .v3-section     { padding: 56px 0 !important; }
+          .v3-footer-row  { flex-direction: column !important; gap: 6px !important; }
+          .v3-research-head { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+          .v3-research-head > div:last-child { text-align: left !important; }
+          .v3-equity-head { flex-direction: column !important; align-items: flex-start !important; gap: 4px !important; }
+        }
+        @media (max-width: 640px) {
+          .v3-tw { font-size: 18px !important; }
+        }
+        @media (max-width: 480px) {
+          .v3-tw { font-size: 16px !important; }
+        }
       `}</style>
 
-      <div style={styles.container}>
+      <div style={styles.container} className="v3-container">
         {/* Nav */}
         <nav style={styles.nav}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span className={showPulse ? "v3-dot v3-pulse" : "v3-dot"} style={{ borderRadius: '50%' }}></span>
             <span style={{ ...styles.mono, fontSize: 13, letterSpacing: '-0.01em' }}>avi.mukesh</span>
           </div>
-          <div style={{ display: 'flex', gap: 32 }}>
+          <div className="v3-nav-links" style={{ display: 'flex', gap: 32 }}>
             <NavLink href="#research">Research</NavLink>
             <NavLink href="#projects">Projects</NavLink>
             <NavLink href="#cv">CV</NavLink>
@@ -218,18 +327,18 @@ function V3Portfolio() {
         </nav>
 
         {/* Hero */}
-        <section style={{ padding: '96px 0 112px' }}>
+        <section className="v3-hero" style={{ padding: '96px 0 112px' }}>
           <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 28 }}>
             01 / Hello
           </div>
-          <h1 style={{
+          <h1 className="v3-h1" style={{
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: 104, lineHeight: 1.0, letterSpacing: '-0.045em',
             fontWeight: 500, margin: 0,
           }}>
             Avi Mukesh.
           </h1>
-          <div style={{
+          <div className="v3-tw" style={{
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: 64, lineHeight: 1.1, letterSpacing: '-0.035em',
             fontWeight: 500, marginTop: 20, minHeight: '1.2em',
@@ -242,8 +351,8 @@ function V3Portfolio() {
               words={typewriterWords} />
           </div>
 
-          <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 64, alignItems: 'start' }}>
-            <p style={{ fontSize: 22, lineHeight: 1.45, color: text, margin: 0, maxWidth: 560 }}>
+          <div className="v3-hero-row" style={{ marginTop: 56, display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 64, alignItems: 'start' }}>
+            <p className="v3-hero-subtitle" style={{ fontSize: 22, lineHeight: 1.45, color: text, margin: 0, maxWidth: 560 }}>
               {subtitleText}
             </p>
             <div>
@@ -268,8 +377,8 @@ function V3Portfolio() {
         </section>
 
         {/* Research */}
-        <section id="research" style={styles.section}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 24 }}>
+        <section id="research" className="v3-section" style={styles.section}>
+          <div className="v3-research-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 24 }}>
             <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em' }}>
               02 / Research
             </div>
@@ -278,7 +387,7 @@ function V3Portfolio() {
             </div>
           </div>
 
-          <h2 style={{ fontSize: 56, lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 500, margin: '0 0 32px', maxWidth: 880 }}>
+          <h2 className="v3-h2" style={{ fontSize: 56, lineHeight: 1.02, letterSpacing: '-0.035em', fontWeight: 500, margin: '0 0 32px', maxWidth: 880 }}>
             A cross-sectional momentum<br />strategy on crypto.
           </h2>
 
@@ -289,7 +398,7 @@ function V3Portfolio() {
             per-side cost model, and a BTC regime filter that flips short exposure to long in bull markets.
           </p>
 
-          <div style={{ marginTop: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 64px', maxWidth: 920 }}>
+          <div className="v3-research-bullets" style={{ marginTop: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 64px', maxWidth: 920 }}>
             {[
             <>Net <span style={{ color: accent, fontWeight: 600 }}>Sharpe 2.25</span> across the backtest, against BTC buy-and-hold at 0.68 and an equal-weight basket at 0.51. Near-zero beta suggests the alpha is not crypto market exposure.</>,
             <>Tweet-attention divergence is the dominant alpha source (information coefficient <span style={{ color: accent, fontWeight: 600 }}>+0.096</span> in 2022), with measurable decay over time — consistent with increasing market efficiency.</>,
@@ -304,8 +413,8 @@ function V3Portfolio() {
             )}
           </div>
 
-          <div style={{ marginTop: 56, background: card, border: `1px solid ${rule}`, borderRadius: 8, padding: '32px 36px 28px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+          <div className="v3-research-card" style={{ marginTop: 56, background: card, border: `1px solid ${rule}`, borderRadius: 8, padding: '32px 36px 28px' }}>
+            <div className="v3-equity-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
               <div style={{ fontSize: 16, fontWeight: 500 }}>Equity curve <span style={{ color: muted, fontWeight: 400, fontSize: 13 }}>· illustrative shape, not actual backtest output</span></div>
               <div style={{ ...styles.mono, fontSize: 12, color: muted }}>
                 <span style={{ color: accent }}>━</span>&nbsp; xs-momo
@@ -320,12 +429,12 @@ function V3Portfolio() {
         </section>
 
         {/* Projects */}
-        <section id="projects" style={styles.section}>
+        <section id="projects" className="v3-section" style={styles.section}>
           <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 24 }}>
             03 / Projects
           </div>
-          <h2 style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 40px' }}>Code in the open.</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <h2 className="v3-h2" style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 40px' }}>Code in the open.</h2>
+          <div className="v3-projects-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             {projects.map((p) =>
             <a key={p.name} href={`https://github.com/avi-mukesh/${p.name}`} className="v3-card" style={{ textDecoration: 'none', color: text, display: 'block' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
@@ -343,15 +452,15 @@ function V3Portfolio() {
         </section>
 
         {/* CV */}
-        <section id="cv" style={styles.section}>
+        <section id="cv" className="v3-section" style={styles.section}>
           <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 24 }}>
             04 / Where I've been
           </div>
-          <h2 style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 40px' }}>Where I've been.</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', rowGap: 32, columnGap: 32 }}>
+          <h2 className="v3-h2" style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 40px' }}>Where I've been.</h2>
+          <div className="v3-cv-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', rowGap: 32, columnGap: 32 }}>
             {timeline.map((t, i) =>
             <React.Fragment key={i}>
-                <div style={{ ...styles.mono, fontSize: 13, color: muted, paddingTop: 6 }}>{t.years}</div>
+                <div className="v3-cv-years" style={{ ...styles.mono, fontSize: 13, color: muted, paddingTop: 6 }}>{t.years}</div>
                 <div style={{ paddingBottom: 32, borderBottom: `1px solid ${rule}` }}>
                   <div style={{ fontSize: 22, fontWeight: 500 }}>{t.role}</div>
                   <div style={{ fontSize: 16, color: muted, marginTop: 2 }}>{t.org}</div>
@@ -359,7 +468,7 @@ function V3Portfolio() {
                 </div>
               </React.Fragment>
             )}
-            <div style={{ ...styles.mono, fontSize: 13, color: muted, paddingTop: 6 }}>2019 — 23</div>
+            <div className="v3-cv-years" style={{ ...styles.mono, fontSize: 13, color: muted, paddingTop: 6 }}>2019 — 23</div>
             <div>
               <div style={{ fontSize: 22, fontWeight: 500 }}>MMath Mathematics, <span style={{ color: accent }}>First Class (83%)</span></div>
               <div style={{ fontSize: 16, color: muted, marginTop: 2 }}>University of Warwick</div>
@@ -372,7 +481,7 @@ function V3Portfolio() {
 
           <div style={{ marginTop: 56 }}>
             <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 14 }}>Also certified in</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 15 }}>
+            <div className="v3-cert-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 15 }}>
               <div>Quantitative Finance &amp; Algorithmic Trading in Python <span style={{ color: muted }}>· Udemy</span></div>
               <div>Machine Learning Engineer Nanodegree <span style={{ color: muted }}>· AWS / Udacity</span></div>
               <div>Machine Learning <span style={{ color: muted }}>· Stanford / Coursera</span></div>
@@ -382,21 +491,21 @@ function V3Portfolio() {
         </section>
 
         {/* Off-keyboard — hobbies / lifts / reading */}
-        <section id="off-keyboard" style={styles.section}>
+        <section id="off-keyboard" className="v3-section" style={styles.section}>
           <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 24 }}>
             05 / Off-keyboard
           </div>
-          <h2 style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 12px', lineHeight: 1.05 }}>
+          <h2 className="v3-h2" style={{ fontSize: 48, letterSpacing: '-0.03em', fontWeight: 500, margin: '0 0 12px', lineHeight: 1.05 }}>
             Outside of work.
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: muted, margin: '0 0 40px', maxWidth: 620 }}>
             A few things I spend time on.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20 }}>
+          <div className="v3-off-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20 }}>
             {/* Speedcubing card */}
-            <div className="v3-card" style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
+            <div className="v3-card v3-card-padded" style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div className="v3-cubing-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
                 <div>
                   <div style={{ ...styles.mono, fontSize: 11, color: muted, letterSpacing: '0.08em', marginBottom: 6 }}>SPEEDCUBING</div>
                   <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em' }}>Speedcubing.</div>
@@ -404,7 +513,7 @@ function V3Portfolio() {
                     Rubik's Cube Society at Warwick. Occasional UK competitions.
                   </div>
                 </div>
-                <div style={{ perspective: 300, width: 96, height: 96, flex: '0 0 96px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="v3-cubing-cube" style={{ perspective: 300, width: 96, height: 96, flex: '0 0 96px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div className="v3-cube">
                     <div className="v3-cube-face v3-cube-front" />
                     <div className="v3-cube-face v3-cube-back" />
@@ -416,16 +525,16 @@ function V3Portfolio() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24, borderTop: `1px solid ${rule}`, paddingTop: 20 }}>
+              <div className="v3-cubing-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24, borderTop: `1px solid ${rule}`, paddingTop: 20 }}>
                 {[
                 { label: '3×3 single', value: '11.09', unit: 's' },
                 { label: '3×3 average', value: '13.09', unit: 's' },
                 { label: '4×4 single', value: '1:01.52', unit: '' }].
                 map((r) =>
                 <div key={r.label}>
-                    <div style={{ ...styles.mono, fontSize: 11, color: muted, letterSpacing: '0.06em', marginBottom: 8 }}>{r.label.toUpperCase()}</div>
+                    <div className="v3-cubing-label" style={{ ...styles.mono, fontSize: 11, color: muted, letterSpacing: '0.06em', marginBottom: 8 }}>{r.label.toUpperCase()}</div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                      <span style={{ ...styles.mono, fontSize: 28, fontWeight: 500, color: text, fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
+                      <span className="v3-cubing-value" style={{ ...styles.mono, fontSize: 28, fontWeight: 500, color: text, fontVariantNumeric: 'tabular-nums' }}>{r.value}</span>
                       {r.unit && <span style={{ ...styles.mono, fontSize: 11, color: dim }}>{r.unit}</span>}
                     </div>
                   </div>
@@ -483,11 +592,11 @@ function V3Portfolio() {
         </section>
 
         {/* Contact */}
-        <section id="contact" style={{ ...styles.section, paddingBottom: 0 }}>
+        <section id="contact" className="v3-section" style={{ ...styles.section, paddingBottom: 0 }}>
           <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 24 }}>
             06 / Get in touch
           </div>
-          <h2 style={{ fontSize: 72, letterSpacing: '-0.035em', fontWeight: 500, margin: '0 0 40px', lineHeight: 1.02 }}>
+          <h2 className="v3-contact-h2" style={{ fontSize: 72, letterSpacing: '-0.035em', fontWeight: 500, margin: '0 0 40px', lineHeight: 1.02 }}>
             Say hello.<br />
             <a href="mailto:avimukesh10@gmail.com" className="v3-link" style={{ color: accent }}>avimukesh10@gmail.com</a>
           </h2>
@@ -495,7 +604,7 @@ function V3Portfolio() {
             <a className="v3-link" href="https://github.com/avi-mukesh">github.com/avi-mukesh ↗</a>
             <a className="v3-link" href="https://www.linkedin.com/in/avi-mukesh/">linkedin.com/in/avi-mukesh ↗</a>
           </div>
-          <div style={{ marginTop: 96, paddingTop: 24, paddingBottom: 40, borderTop: `1px solid ${rule}`, display: 'flex', justifyContent: 'space-between', ...styles.mono, fontSize: 12, color: dim }}>
+          <div className="v3-footer-row" style={{ marginTop: 96, paddingTop: 24, paddingBottom: 40, borderTop: `1px solid ${rule}`, display: 'flex', justifyContent: 'space-between', ...styles.mono, fontSize: 12, color: dim }}>
             <span>© 2026 Avi Mukesh</span>
             <span>set in Space Grotesk + JetBrains Mono</span>
           </div>

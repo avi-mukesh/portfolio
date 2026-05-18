@@ -216,12 +216,17 @@ function V3Portfolio() {
 
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) =>
-  <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
+  <a href={href} style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
 
 
   return (
     <div style={styles.root}>
       <style>{`
+        html { scroll-behavior: smooth; }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+        }
+
         @keyframes v3blink { 50% { opacity: 0 } }
         .v3-nav-link { position: relative; }
         .v3-nav-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 0; background: ${accent}; transition: width .25s ease; }

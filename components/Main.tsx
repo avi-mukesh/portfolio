@@ -570,7 +570,7 @@ function V3Portfolio() {
                   )}
                 </div>
                 <div style={{ ...styles.mono, fontSize: 11, color: muted, marginTop: 14, paddingTop: 12, borderTop: `1px solid ${rule}`, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>total <span style={{ color: text }}>450</span>&nbsp;kg</span>
+                  <span>total <span style={{ color: text }}>445</span>&nbsp;kg</span>
                   <span>@ <span style={{ color: text }}>72</span>&nbsp;kg BW</span>
                 </div>
               </div>

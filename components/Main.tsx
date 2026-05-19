@@ -202,31 +202,26 @@ function V3Portfolio() {
   };
 
   const projects: Project[] = [
-  { name: 'crypto-xs-momo', lang: 'Python', year: '2026', blurb: 'A cross-sectional momentum strategy on crypto combining recent price returns, tweet-attention divergence (tweet counts, not sentiment) and order-flow taker imbalance. Backtested 2022–2024 across 8 Binance perpetuals. Writeup in progress.' },
-  { name: 'quant-finance-content', lang: 'Instagram · @avi_mukesh', year: 'ongoing', blurb: 'Short-form videos translating mathematical-finance concepts — put-call parity, Monte Carlo, CAPM, value-at-risk, random walks — for a general audience.', href: 'https://www.instagram.com/avi_mukesh/' },
+  { name: 'crypto-xs-momo', lang: 'Python', year: '2026', blurb: 'A cross-sectional momentum strategy on crypto combining recent price returns, tweet-attention divergence (tweet counts, not sentiment) and order-flow taker imbalance. Backtested 2022–2024 across 8 cryptocurrencies. Writeup in progress.' },
+  { name: 'Quant Finance Content', lang: 'Instagram · @avi_mukesh', year: 'ongoing', blurb: 'Short-form videos translating mathematical finance concepts (e.g. put-call parity, Monte Carlo, CAPM, value-at-risk, random walks) for a mathematically-inclined audience.', href: 'https://www.instagram.com/avi_mukesh/' },
   { name: 'premier-league-predictor', lang: 'Python · AWS SageMaker', year: '2023', blurb: 'AWS ML Engineer Nanodegree capstone. Random Forest classifier on a Kaggle Premier League dataset. 60% precision after tuning.' },
-  { name: '80in8', lang: 'Next.js', year: '2026', blurb: 'A mental-arithmetic trainer — 80 questions in 8 minutes, with a scoring ladder on the way out.', href: 'https://80in8.com' }];
+  { name: '80in8', lang: 'Next.js', year: '2026', blurb: 'A mental arithmetic trainer. 80 questions in 8 minutes. Contains maths tips and tricks to help you improve.', href: 'https://80in8.com' }];
 
 
   const timeline: TimelineItem[] = [
-  { years: 'Jan 2025 — Now', role: 'Software Developer', org: 'Singletrack', detail: 'Working with the product team on a B2B SaaS platform for capital-markets firms — features, defects, support tickets. Stack: Apex, Lightning Web Components, AWS, Heroku, Ruby on Rails.' },
+  { years: 'Jan 2025 — Now', role: 'Software Developer', org: 'Singletrack', detail: 'Working with the product team on a B2B SaaS platform for firms in the capital markets industry. Developing features, fixing defects, and handling support tickets. Stack: Apex, Lightning Web Components, AWS, Heroku, Ruby on Rails.' },
   { years: 'Feb 2026 — Now', role: 'Quant Research Bootcamp · Capstone', org: 'WallStreetQuants', detail: '12-week buy-side quant program. Capstone is the cross-sectional momentum strategy detailed in Research above.' },
   { years: 'Sep 2023 — Dec 2024', role: 'Software Developer', org: 'Dorset Software', detail: 'Led the test team for a client-facing API used by a leading insurance firm. ASP.NET and SQL; Postman flows that materially improved efficiency of subsequent testing phases.' },
   { years: 'Dec 2021 — Now', role: 'Maths Tutor', org: <>GoStudent → MyTutor · <a href="https://mukeshacademy.com" target="_blank" rel="noreferrer" className="v3-link">mukeshacademy.com</a></>, detail: 'Four-plus years of one-to-one tutoring. Three and a half years at GoStudent through to May 2025, now at MyTutor, plus a handful of private students who find me through mukeshacademy.com. GCSE and A-Level across pure, stats and mechanics.' }];
 
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) =>
-  <a href={href} style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
+  <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
 
 
   return (
     <div style={styles.root}>
       <style>{`
-        html { scroll-behavior: smooth; }
-        @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto; }
-        }
-
         @keyframes v3blink { 50% { opacity: 0 } }
         .v3-nav-link { position: relative; }
         .v3-nav-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 1.5px; width: 0; background: ${accent}; transition: width .25s ease; }
@@ -370,11 +365,11 @@ function V3Portfolio() {
                   border: `1px solid ${rule}`
                 }} />
                 <div style={{ ...styles.mono, fontSize: 12, color: muted, lineHeight: 1.9, paddingTop: 2 }}>
-                  <div><span style={{ color: dim }}>location —————</span> Gillingham, Kent</div>
-                  <div><span style={{ color: dim }}>education ————</span> MMath, Warwick (1st)</div>
-                  <div><span style={{ color: dim }}>current role —————</span> SWE, Singletrack</div>
-                  <div><span style={{ color: dim }}>quant program ———</span> WSQ bootcamp</div>
-                  <div><span style={{ color: dim }}>tutoring —————</span> 4+ years</div>
+                  <div><span style={{ color: dim }}>location ———————</span> Gillingham, Kent</div>
+                  <div><span style={{ color: dim }}>education ——————</span> MMath, Warwick (1st)</div>
+                  <div><span style={{ color: dim }}>current role ———</span> SWE, Singletrack</div>
+                  <div><span style={{ color: dim }}>quant program ——</span> WSQ bootcamp</div>
+                  <div><span style={{ color: dim }}>tutoring ———————</span> 4+ years</div>
                   <div><span style={{ color: dim }}>off-keyboard ———</span> cubes, lifts, books</div>
                 </div>
               </div>

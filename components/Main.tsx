@@ -483,10 +483,15 @@ function V3Portfolio() {
           <div style={{ marginTop: 56 }}>
             <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 14 }}>Also certified in</div>
             <div className="v3-cert-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 15 }}>
-              <div>Quantitative Finance &amp; Algorithmic Trading in Python <span style={{ color: muted }}>· Udemy</span></div>
-              <div>Machine Learning Engineer Nanodegree <span style={{ color: muted }}>· AWS / Udacity</span></div>
-              <div>Machine Learning <span style={{ color: muted }}>· Stanford / Coursera</span></div>
-              <div>Data Analytics Certificate <span style={{ color: muted }}>· Meta / Coursera</span></div>
+              <div>
+                <a href="https://www.udemy.com/certificate/UC-8c114ec5-6614-430e-8135-fe2ce0abdcfb/" target="_blank" rel="noreferrer" className="v3-link">Quantitative Finance &amp; Algorithmic Trading in Python</a> <span style={{ color: muted }}>· Udemy</span>
+              </div>
+              <div>
+                <a href="https://www.udacity.com/certificate/CG9Q6ZDM" target="_blank" rel="noreferrer" className="v3-link">Machine Learning Engineer Nanodegree</a> <span style={{ color: muted }}>· AWS / Udacity</span>
+              </div>
+              <div>
+                <a href="https://www.coursera.org/account/accomplishments/verify/43IRUEZ2XGCY" target="_blank" rel="noreferrer" className="v3-link">Machine Learning</a> <span style={{ color: muted }}>· Stanford / Coursera</span>
+              </div>
             </div>
           </div>
         </section>

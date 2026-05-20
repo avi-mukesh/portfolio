@@ -482,7 +482,7 @@ function V3Portfolio() {
 
           <div style={{ marginTop: 56 }}>
             <div style={{ ...styles.mono, fontSize: 12, color: muted, letterSpacing: '0.06em', marginBottom: 14 }}>Also certified in</div>
-            <div className="v3-cert-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 15 }}>
+            <div className="v3-cert-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px 32px', fontSize: 15 }}>
               <div>
                 <a href="https://www.udemy.com/certificate/UC-8c114ec5-6614-430e-8135-fe2ce0abdcfb/" target="_blank" rel="noreferrer" className="v3-link">Quantitative Finance &amp; Algorithmic Trading in Python</a> <span style={{ color: muted }}>· Udemy</span>
               </div>

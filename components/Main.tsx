@@ -216,7 +216,7 @@ function V3Portfolio() {
 
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) =>
-  <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
+  <a href={href} style={{ color: text, textDecoration: 'none', fontSize: 14 }} className="v3-nav-link">{children}</a>;
 
 
   return (

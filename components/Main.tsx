@@ -592,12 +592,12 @@ function V3Portfolio() {
               maxWidth: 740,
             }}
           >
-            A Python implementation combining three signals — recent price
-            momentum, tweet-attention divergence (driven by tweet counts, not
-            sentiment) and order-flow taker imbalance — applied
-            cross-sectionally to a basket of eight Binance assets. Weekly
-            rebalance with a 20bps per-side cost model, and a BTC regime filter
-            that flips short exposure to long in bull markets.
+            A Python implementation of a cross-sectional price momentum strategy
+            applied to a basket of eight Binance assets. Daily rebalance with a
+            20bps per-side cost model and a BTC regime filter that zeros short
+            exposure in bull markets. A tweet-attention divergence signal is
+            also explored, with taker imabalance and documented as a cautionary
+            example of overfitting.
           </p>
 
           <div

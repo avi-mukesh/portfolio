@@ -646,6 +646,14 @@ function V3Portfolio() {
                 shows performance is robust across a broad neighbourhood, not a
                 lucky local optimum.
               </>,
+              <>
+                A secondary price-tweet divergence strategy (in-sample{" "}
+                <span style={{ color: accent, fontWeight: 600 }}>
+                  Sharpe 1.56
+                </span>
+                ) is documented as a case study in overfitting. It had strong
+                in-sample results that failed to generalise out-of-sample.
+              </>,
             ].map((b, i) => (
               <div
                 key={i}

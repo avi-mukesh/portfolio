@@ -246,6 +246,14 @@ function V3Portfolio() {
       href: "https://www.instagram.com/avi_mukesh/",
     },
     {
+      name: "orderbook-simulator",
+      lang: "C++",
+      year: "2026",
+      blurb:
+        "Price-time priority order matching engine supporting market, limit, IOC and FOK order types. Benchmarked at ~4M insertions/sec with O(log n) complexity. O(1) cancellation via a hash map from order ID to a stable list iterator, chosen over a deque for guaranteed iterator validity after deletion.",
+      href: "https://github.com/avi-mukesh/orderbook-simulator",
+    },
+    {
       name: "premier-league-predictor",
       lang: "Python · AWS SageMaker",
       year: "2023",

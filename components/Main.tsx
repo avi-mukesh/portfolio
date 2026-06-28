@@ -545,16 +545,12 @@ function V3Portfolio() {
                     Singletrack
                   </div>
                   <div>
-                    <span style={{ color: dim }}>quant program ——</span> WSQ
-                    bootcamp
-                  </div>
-                  <div>
                     <span style={{ color: dim }}>tutoring ———————</span> 4+
                     years
                   </div>
                   <div>
                     <span style={{ color: dim }}>off-keyboard ———</span> cubes,
-                    lifts, books
+                    lifts, reads
                   </div>
                 </div>
               </div>

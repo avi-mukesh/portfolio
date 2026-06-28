@@ -55,7 +55,7 @@ const defaultTweaks = {
     "speedcubing & lifting.",
   ],
   subtitle:
-    "MMath Warwick (First Class, 83%). Software Developer at Singletrack, four-plus years of maths tutoring, and a quant-finance creator on Instagram. Currently building a cross-sectional momentum strategy on crypto as the capstone for the WallStreetQuants bootcamp. Speedcubing and lifting in between.",
+    "MMath Warwick (First Class, 83%). Software Developer at Singletrack, 4+ years of maths tutoring, and a mathematical finance educator on Instagram. Built a cross-sectional momentum strategy on cryptocurrencies and an order book simulator in C++. Currently building a Monte Carlo pricing engine in AWS. Speedcubing and lifting in between.",
   typingSpeed: 50,
   marquee: true,
   pulse: true,
@@ -196,9 +196,6 @@ function V3Portfolio() {
     "tutoring maths.",
   ];
 
-  const subtitleText =
-    tweaks.subtitle ||
-    "Software developer with a maths background. MMath from Warwick (First Class, 83%) in 2023, two roles since — currently at Singletrack, previously at Dorset Software. Researching crypto momentum on the side and looking to move into quant.";
   const showPulse = tweaks.pulse !== false;
 
   const styles: Record<
@@ -234,7 +231,7 @@ function V3Portfolio() {
       lang: "Python",
       year: "2026",
       blurb:
-        "A cross-sectional momentum strategy on crypto using recent price returns. Also explored tweet-attention divergence (tweet counts, not sentiment) and order-flow taker imbalance. Backtested 2022–2024 across 8 cryptocurrencies.",
+        "Cross-sectional momentum strategy trading 8 cryptocurrencies on Binance. Net Sharpe 1.12 in-sample (2022–2024), 0.70 out-of-sample on a 17-coin expanded universe with a ~10-day holding period. Transaction costs modelled at 20 bps/side with walk-forward validation and 2D parameter-sensitivity analysis.",
       href: "https://github.com/avi-mukesh/crypto-quant-project",
     },
     {
@@ -242,7 +239,7 @@ function V3Portfolio() {
       lang: "Instagram · @avi_mukesh",
       year: "ongoing",
       blurb:
-        "Short-form videos translating mathematical finance concepts (e.g. put-call parity, Monte Carlo, CAPM, value-at-risk, random walks) for a mathematically-inclined audience.",
+        "Short-form educational content on mathematical finance and trading concepts (put-call parity, bond pricing, options theory) for a mathematically-inclined audience of 4,600+ on Instagram.",
       href: "https://www.instagram.com/avi_mukesh/",
     },
     {
@@ -276,7 +273,7 @@ function V3Portfolio() {
       role: "Software Developer",
       org: "Singletrack",
       detail:
-        "Working with the product team on a B2B SaaS platform for firms in the capital markets industry. Developing features, fixing defects, and handling support tickets. Stack: Apex, Lightning Web Components, AWS, Heroku, Ruby on Rails.",
+        "AI-powered capital markets platform for sell-side and buy-side firms. Delivered a PoC with rule-driven research approval workflows and Outlook integration for a tier-1 institution within two months. Contributed to a Salesforce-to-PostgreSQL migration handling millions of records and built a client entity sync pipeline across 4+ object families.",
     },
     {
       years: "Feb 2026 — Now",
@@ -290,7 +287,7 @@ function V3Portfolio() {
       role: "Software Developer",
       org: "Dorset Software",
       detail:
-        "Led the test team for a client-facing API used by a leading insurance firm. ASP.NET and SQL; Postman flows that materially improved efficiency of subsequent testing phases.",
+        "Built and tested client-facing quote APIs in C# and ASP.NET Core for a leading insurance provider. Also led development of a full-stack internal tool for mentors to assign courses to students, applying SOLID principles throughout.",
     },
     {
       years: "Dec 2021 — Now",
@@ -309,7 +306,7 @@ function V3Portfolio() {
         </>
       ),
       detail:
-        "Four-plus years of one-to-one tutoring. Three and a half years at GoStudent through to May 2025, now at MyTutor, plus a handful of private students who find me through mukeshacademy.com. GCSE and A-Level across pure, stats and mechanics.",
+        "Four-plus years of one-to-one tutoring at GoStudent, MyTutor, and independently via mukeshacademy.com. A-Level and GCSE across calculus, statistics, and mechanics, with several students achieving target A* and A grades.",
     },
   ];
 
@@ -485,7 +482,7 @@ function V3Portfolio() {
               alignItems: "start",
             }}
           >
-            <p
+            <div
               className="v3-hero-subtitle"
               style={{
                 fontSize: 22,
@@ -493,10 +490,23 @@ function V3Portfolio() {
                 color: text,
                 margin: 0,
                 maxWidth: 560,
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
               }}
             >
-              {subtitleText}
-            </p>
+              <p style={{ margin: 0 }}>
+                MMath Warwick (First Class, 83%). Software Developer at
+                Singletrack, 4+ years of maths tutoring, and a mathematical
+                finance educator on Instagram.
+              </p>
+              <p style={{ margin: 0 }}>
+                Built a cross-sectional momentum strategy on cryptocurrencies,
+                an order book simulator in C++, and currently building a Monte
+                Carlo pricing engine in AWS.
+              </p>
+              <p style={{ margin: 0 }}>Speedcubing and lifting in between.</p>
+            </div>
             <div>
               <div
                 style={{ display: "flex", alignItems: "flex-start", gap: 20 }}
@@ -630,10 +640,10 @@ function V3Portfolio() {
                 not simply crypto market exposure.
               </>,
               <>
-                Tweet-attention divergence showed measurable alpha decay —
-                information coefficient{" "}
+                Tweet-attention divergence showed measurable alpha decay.
+                Information coefficient{" "}
                 <span style={{ color: accent, fontWeight: 600 }}>+0.012</span>{" "}
-                in 2022, decaying to -0.017 by 2024 — consistent with increasing
+                in 2022, decaying to -0.017 by 2024, consistent with increasing
                 market efficiency with respect to social signals.
               </>,
               <>
@@ -909,14 +919,48 @@ function V3Portfolio() {
                   maxWidth: 560,
                 }}
               >
-                Modules included Mathematics of Machine Learning, Topics in Data
-                Science, Numerical Methods, Mathematics by Computer, Advanced
-                PDEs. Course Rep, Rubik's Cube Society, programming mentor.
+                Modules included Mathematics of Machine Learning, Linear
+                Algebra, Numerical Methods, Advanced PDEs. Selected to deliver
+                mathematics seminars to incoming offer-holders. Course Rep,
+                Rubik&apos;s Cube Society, programming mentor.
               </div>
             </div>
           </div>
 
           <div style={{ marginTop: 56 }}>
+            <div
+              style={{
+                ...styles.mono,
+                fontSize: 12,
+                color: muted,
+                letterSpacing: "0.06em",
+                marginBottom: 14,
+              }}
+            >
+              Awards
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "10px 32px",
+                fontSize: 15,
+                marginBottom: 40,
+              }}
+            >
+              <div>
+                UKMT Senior Kangaroo{" "}
+                <span style={{ color: muted }}>
+                  · Certificate of Merit, 2018
+                </span>
+              </div>
+              <div>
+                CREST Gold · Nuffield Research Placement{" "}
+                <span style={{ color: muted }}>
+                  · University of Kent, astronomy data-analysis tool, 2018
+                </span>
+              </div>
+            </div>
             <div
               style={{
                 ...styles.mono,
